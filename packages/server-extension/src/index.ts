@@ -12,7 +12,7 @@ import {
   IBroadcastChannelWrapper,
 } from '@jupyterlite/contents';
 
-import { IKernels, Kernels, IKernelSpecs, KernelSpecs } from '@jupyterlite/kernel';
+import { IKernels, Kernels, IKernelSpecs, KernelSpecs, IEmpackEnvMetaFile } from '@jupyterlite/kernel';
 
 import { ILicenses, Licenses } from '@jupyterlite/licenses';
 
@@ -287,6 +287,28 @@ const kernelsPlugin: JupyterLiteServerPlugin<IKernels> = {
   requires: [IKernelSpecs],
   activate: (app: JupyterLiteServer, kernelspecs: IKernelSpecs) => {
     return new Kernels({ kernelspecs });
+  },
+};
+
+/**
+ * The plugin for getting the empack_env_meta_link.
+ */
+const empackEnvMetaPlugin: JupyterLiteServerPlugin<IKernels> = {
+  id: '@jupyterlite/server-extension:empack-env-meta',
+  autoStart: true,
+  provides: IEmpackEnvMetaFile,
+  activate: (app: JupyterLiteServer) => {
+    return {
+      getLink(){ 
+        let empackEnvMetaLink =''
+         const searchParams = new URL(location.href).searchParams;
+          
+          if (searchParams && searchParams.get('empack_env_meta'))  {
+            empackEnvMetaLink = searchParams.get('empack_env_meta') as string;
+          }
+          return empackEnvMetaLink;
+      }
+    };
   },
 };
 
@@ -605,6 +627,7 @@ const plugins: JupyterLiteServerPlugin<any>[] = [
   settingsRoutesPlugin,
   translationPlugin,
   translationRoutesPlugin,
+  empackEnvMetaPlugin,
 ];
 
 export default plugins;

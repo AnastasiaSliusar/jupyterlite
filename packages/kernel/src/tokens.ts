@@ -134,6 +134,15 @@ export namespace IKernel {
  */
 export const IKernelSpecs = new Token<IKernelSpecs>('@jupyterlite/kernel:IKernelSpecs');
 
+
+export const IEmpackEnvMetaFile = new Token<IEmpackEnvMetaFile>('@jupyterlite/kernel:IEmpackEnvMetaFile');
+
+export interface IEmpackEnvMetaFile {
+  /**
+   * Get empack_env_meta link.
+   */
+  getLink:()=> string;
+}
 /**
  * The interface for the kernel specs service.
  */
